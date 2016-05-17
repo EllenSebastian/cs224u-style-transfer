@@ -9,8 +9,8 @@ hypothesis2 = 'The king stays up tonight and takes his rouse'.split(' ')
 hypothesis3 = 'The king stays up tonight drinking and dancing'.split(' ')
 hypothesis4 = 'The king stays up all night drinking and dancing'.split(' ')
 
-for hyp in [hypothesis1, hypothesis2, hypothesis3, hypothesis4, reference1]:
-	print bleu_score.sentence_bleu([reference1], hyp)
+for hyp in [hypothesis1, hypothesis2, hypothesis3, hypothesis4, reference]:
+	print bleu_score.sentence_bleu([reference], hyp)
 
 
 # use corpus_bleu to evaluate multi-sentence paraphrases.
