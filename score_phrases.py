@@ -24,11 +24,8 @@ def select_best_phrase(phrases, model, temp=1, verbose=False):
         if verbose:
             print (p, score)
     max_idx = np.argmax(scores)
-    best_phrase = phrases[max_idx]
-    if verbose:
-        print 'Best phrase: %s' % best_phrase
     os.chdir('..')
-    return best_phrase
+    return phrases[max_idx]
 
 def main():
     # Usage example
@@ -36,8 +33,8 @@ def main():
                     "make America float again",
                     "make America plump again",
                     "make America fsdfs again"]
-    select_best_phrase(test_phrases, "checkpoint_37000.t7", verbose=True)
-
+    best_phrase = select_best_phrase(test_phrases, "checkpoint_37000.t7", verbose=True)
+    print 'Best phrase: %s' % best_phrase
 
 if __name__ == "__main__":
     main()
