@@ -16,6 +16,18 @@ def get_score(phrase, model, temp):
     return float(p.stdout.read().strip())
 
 def select_best_phrase(phrases, model, temp=1, verbose=False):
+    """
+    Inputs:
+        phrases:
+            a list of candidate strings
+        model:
+            a checkpoint .t7 file stored in torch-rnn/cv/
+            containing a neural language model trained through
+            train.lua
+    Output:
+        the string in the phrases list with the highest
+        probability according to the language model
+    """
     os.chdir('torch-rnn')
     scores = []
     for p in phrases:
