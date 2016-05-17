@@ -194,7 +194,6 @@ function LM:sample(kwargs)
        local probs = torch.div(scores, temperature):double():exp():squeeze()
        probs:div(torch.sum(probs))
        next_char = torch.multinomial(probs, 1):view(1, 1)
-       print(next_char)
     end
     sampled[{{}, {t, t}}]:copy(next_char)
     scores = self:forward(next_char)
