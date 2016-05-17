@@ -194,6 +194,7 @@ function LM:sample(kwargs)
        local probs = torch.div(scores, temperature):double():exp():squeeze()
        probs:div(torch.sum(probs))
        next_char = torch.multinomial(probs, 1):view(1, 1)
+       print(next_char)
     end
     sampled[{{}, {t, t}}]:copy(next_char)
     scores = self:forward(next_char)
@@ -203,6 +204,30 @@ function LM:sample(kwargs)
   return self:decode_string(sampled[1])
 end
 
+function LM:get_text_score(kwargs)
+  local text = utils.get_kwarg(kwargs, 'text', '')
+  local temperature = utils.get_kwarg(kwargs, 'temperature', 1)
+
+  self:resetStates()
+
+  local w = self.net:get(1).weight
+  local scores = w.new(1, 1, self.vocab_size):fill(1)
+
+  local x = self:encode_string(text):view(1, -1)
+  
+  local next_char = nil
+  local score_sum = 0
+
+  for t = 1, #text do
+    scores = torch.div(scores, temperature)
+    next_char = x[{{}, t}]
+    score_sum = score_sum + scores[1][1][next_char[1]]
+    scores = self:forward(next_char:resize(1,1))
+  end
+
+  self:resetStates()
+  return score_sum
+end
 
 function LM:clearState()
   self.net:clearState()
