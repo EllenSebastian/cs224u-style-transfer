@@ -40,7 +40,7 @@ with open(args.source) as source:
         substitute = syn_name
         frequency = counts[syn_name]
     if substitute != '':
-      print word, subtitute
+      print word, substitute
       translation += substitute + ' '
     else:
       translation += word + ' '
