@@ -21,7 +21,6 @@ def batch_select_best_phrase(phrases, model, temp=1):
     """
 
     # Write the list to a file
-    os.chdir('torch-rnn')
 
     phrases_ascii = []
     for sentence in phrases:
@@ -30,6 +29,8 @@ def batch_select_best_phrase(phrases, model, temp=1):
         phrases_ascii.append(cps)
 
     phrases = phrases_ascii
+
+    os.chdir('torch-rnn')
 
     with open('temp.txt','w') as f:
         for sentence in phrases:
@@ -50,6 +51,7 @@ def batch_select_best_phrase(phrases, model, temp=1):
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE
         )
+    os.chdir('..')
 
     # Get a list of indices into phrases corresponding to the best candidate
     # per sentence
@@ -59,12 +61,14 @@ def batch_select_best_phrase(phrases, model, temp=1):
     best_candidates = []
 
     for i, sentence in enumerate(phrases):
-        best_candidates.append(sentence[best_idxs[i]])
+        if sentence:
+            best_candidates.append(sentence[best_idxs[i]])
 
     return best_candidates
 
 
 def get_score(phrase, model, temp):
+    os.chdir('torch-rnn')
     p = subprocess.Popen(
             [
                 'th', 'score.lua',
@@ -75,6 +79,7 @@ def get_score(phrase, model, temp):
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE
         )
+    os.chdir('..')
     return float(p.stdout.read().strip())
 
 def select_best_phrase(phrases, model, temp=1, verbose=False):

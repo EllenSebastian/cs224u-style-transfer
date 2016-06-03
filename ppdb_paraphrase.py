@@ -3,6 +3,7 @@ from score_phrases import batch_select_best_phrase
 from nltk import sent_tokenize, word_tokenize
 import re
 import json
+import itertools
 
 def parse_ppdb_line(line):
     fields = line.split(' ||| ')
@@ -42,6 +43,19 @@ def untokenize(words):
     return step6.strip()
 
 def get_paraphrases(sentence, max_source_len=4):
+    """
+    Inputs:
+        sentence:
+            a string to paraphrase
+        max_source_len:
+            the maximum number of words in the source to query PPDB with at a time
+            all phrases containing [1,max_source_len] words will be looked up in PPDB
+            if a phrase is found in PPDB, it is replaced with the paraphrase and considered
+            a candidate.
+    Output:
+        a list of candidate paraphrases for "sentence". each candidate sentence contains
+        only 1 substitution
+    """
     sentence = word_tokenize(sentence)
     paraphrases = []
     for p_length in range(1, min(len(sentence), max_source_len)):
@@ -53,7 +67,36 @@ def get_paraphrases(sentence, max_source_len=4):
                     paraphrases.append(untokenize(paraphrase))
     return list(set(paraphrases))
 
+def chunker(seq, size):
+    return (seq[pos:pos + size] for pos in xrange(0, len(seq), size))
+
+def get_multi_paraphrases(sentence, model, src_len=5):
+    """
+    Splits sentence up into chunks of src_len words each, finds paraphrases for
+    each chunk and concatenates together the best-scoring paraphrase per chunk.
+    """
+    sentence = word_tokenize(sentence)
+    chunks = chunker(sentence, src_len)
+    c_paraphrases = []
+    for c in chunks:
+        c_paraphrases.append(get_paraphrases(' '.join(c)))
+    selected_paraphrases = batch_select_best_phrase(c_paraphrases, model)
+    return ' '.join(selected_paraphrases)
+
+    # sentence_paraphrases = set(itertools.product(*c_paraphrases))
+    # sentence_paraphrases = [' '.join(p) for p in sentence_paraphrases]
+
+    # return list(set(sentence_paraphrases))
+
 def paraphrase_text(text, model):
+    """
+    Splits text into sentences, and paraphrases each sentence separately. Currently
+    uses get_paraphrases on each sentence to generate candidate paraphrases, which
+    only performs one paraphrase substitution per sentence.
+
+    model should be a string containing the location in torch-rnn of the language
+    model checkpoint, e.g. 'cv/checkpoint_37000.t7'
+    """
     paraphrased_text = []
     print 'Tokenizing...'
     sentences = sent_tokenize(text)
