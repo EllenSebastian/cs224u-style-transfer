@@ -203,9 +203,7 @@ function LM:sample(kwargs)
   return self:decode_string(sampled[1])
 end
 
-function LM:get_text_score(kwargs)
-  local text = utils.get_kwarg(kwargs, 'text', '')
-  local temperature = utils.get_kwarg(kwargs, 'temperature', 1)
+function LM:get_text_score(text, temperature)
 
   self:resetStates()
 
@@ -225,7 +223,7 @@ function LM:get_text_score(kwargs)
   end
 
   self:resetStates()
-  return score_sum
+  return score_sum / string.len(text)
 end
 
 function LM:clearState()

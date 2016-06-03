@@ -1,5 +1,5 @@
 from collections import defaultdict
-from score_phrases import select_best_phrase
+from score_phrases import batch_select_best_phrase
 from nltk import sent_tokenize, word_tokenize
 import re
 import json
@@ -60,11 +60,14 @@ def paraphrase_text(text, model):
     print 'Tokenizing...'
     sentences = sent_tokenize(text)
     print 'Tokenizing complete.'
+
+    # A list of lists of candidate paraphrases
+    paraphrases = []
+
     for sentence in sentences:
-        paraphrases = get_paraphrases(sentence)
-        best_paraphrase = select_best_phrase(paraphrases, model)
-        print "%s -> %s" % (sentence, best_paraphrase)
-        paraphrased_text.append(best_paraphrase)
+        paraphrases.append(get_paraphrases(sentence))
+        
+    paraphrased_text = batch_select_best_phrase(paraphrases, model)
     return ' '.join(paraphrased_text)
 
 def main():
