@@ -6,7 +6,6 @@ import json
 
 def parse_ppdb_line(line):
     fields = line.split(' ||| ')
-    # map(lambda x: x.strip(' .'), fields)
     return (fields[1], fields[2])
 
 def process_ppdb(ppdb_file, json_file):
@@ -22,7 +21,6 @@ def load_ppdb(json_file):
 
 print "Loading PPDB..."
 ppdb = load_ppdb('ppdb-s.json')
-print "PPDB loaded."
 
 def untokenize(words):
     """
@@ -59,16 +57,20 @@ def paraphrase_text(text, model):
     paraphrased_text = []
     print 'Tokenizing...'
     sentences = sent_tokenize(text)
-    print 'Tokenizing complete.'
 
     # A list of lists of candidate paraphrases
     paraphrases = []
 
+    print 'Generating paraphrases...'
     for sentence in sentences:
         paraphrases.append(get_paraphrases(sentence))
-        
-    paraphrased_text = batch_select_best_phrase(paraphrases, model)
-    return ' '.join(paraphrased_text)
+
+    print 'Selecting paraphrases...'
+    selected_paraphrases = batch_select_best_phrase(paraphrases, model)
+    for s, p in zip(sentences, selected_paraphrases):
+        print s, '->', p
+
+    return ' '.join(selected_paraphrases)
 
 def main():
     with open('data/obama/hiroshima.txt') as f:
