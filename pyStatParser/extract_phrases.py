@@ -50,8 +50,8 @@ def extract_phrases_from_sentence(sentence):
 
 def main():
     # Usage example
-    sentence = "Every great religion promises a pathway to love and peace and righteousness, and yet no religion has been spared from believers who have claimed their faith as a license to kill."
-    print extract_phrases(sentence)
+    sentence = "Yet in the image of a mushroom cloud that rose into these skies, we are most starkly reminded of humanity's core contradiction."
+    print extract_phrases_from_sentence(sentence)
     #Returns a list of phrases 
 
 if __name__ == "__main__":
