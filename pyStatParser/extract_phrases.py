@@ -1,6 +1,8 @@
 from nltk.tree import *
 from nltk.corpus import stopwords
 from stat_parser import Parser
+from nltk.tokenize import RegexpTokenizer
+
 
 parser = Parser()
 
@@ -21,6 +23,8 @@ def recurse(t, phrases):
         recurse(c, phrases)
 
 def extract_phrases_from_sentence(sentence):
+  tokenizer = RegexpTokenizer(r'\w+')
+  sentence = ' '.join(tokenizer.tokenize(sentence))
   t = parser.parse(sentence)
   phrases = []
   recurse(t, phrases)
@@ -50,7 +54,7 @@ def extract_phrases_from_sentence(sentence):
 
 def main():
     # Usage example
-    sentence = "Yet in the image of a mushroom cloud that rose into these skies, we are most starkly reminded of humanity's core contradiction."
+    sentence = "Science allows us to communicate across the seas and fly above the clouds, to cure disease and understand the cosmos, but those same discoveries can be turned into ever more efficient killing machines."
     print extract_phrases_from_sentence(sentence)
     #Returns a list of phrases 
 
