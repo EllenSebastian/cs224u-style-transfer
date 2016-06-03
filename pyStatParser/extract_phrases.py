@@ -28,16 +28,16 @@ def extract_phrases_from_sentence(sentence):
   stop = stopwords.words('english')
   phrases = [p for p in phrases if p not in stop]
   new_phrases = []
-  str = sentence.lower()
+  s = sentence.lower()
   for i in range(len(phrases)):
     missing = ''
     p = phrases[i]
-    while str != '':
-      if str.startswith(p):
-        str = str[len(p):]
+    while s != '':
+      if s.startswith(p):
+        s = s[len(p):]
         break
-      missing += str[0]
-      str = str[1:]
+      missing += s[0]
+      s = s[1:]
     if missing != '' and missing != ' ':
       if missing[0] == ' ':
         missing = missing[1:]
