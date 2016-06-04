@@ -57,9 +57,9 @@ def get_paraphrases(sentence, max_source_len=4):
         a list of candidate paraphrases for "sentence". each candidate sentence contains
         only 1 substitution
     """
+    paraphrases = [sentence]
     sentence = word_tokenize(sentence)
-    paraphrases = []
-    for p_length in range(1, min(len(sentence), max_source_len)):
+    for p_length in range(1, min(len(sentence), max_source_len) + 1):
         for i in range(len(sentence) - p_length + 1):
             source = ' '.join(sentence[i:i+p_length])
             if source in ppdb:
@@ -92,7 +92,7 @@ def get_multi_paraphrases(sentence, model, chunker=stopwords_chunker):
     """
     Splits sentence up into chunks according to the chunker function, finds
     paraphrases for each chunk and concatenates together the best-scoring
-    paraphrase per chunk.
+    paraphrase per chunk. Returns a string.
 
     chunker can be: - fixed_chunker
                     - stopwords_chunker
