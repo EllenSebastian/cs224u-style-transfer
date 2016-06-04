@@ -54,7 +54,7 @@ def extract_phrases_from_sentence(sentence):
 
 def main():
     # Usage example
-    sentence = "We are going to make America good again."
+    sentence = "Make America good again."
     print extract_phrases_from_sentence(sentence)
     #Returns a list of phrases 
 

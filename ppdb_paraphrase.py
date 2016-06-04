@@ -1,6 +1,7 @@
 from collections import defaultdict
 from score_phrases import batch_select_best_phrase
 from nltk import sent_tokenize, word_tokenize
+from extract_phrases import extract_phrases_from_sentence
 import re
 import json
 import itertools
@@ -67,19 +68,40 @@ def get_paraphrases(sentence, max_source_len=4):
                     paraphrases.append(untokenize(paraphrase))
     return list(set(paraphrases))
 
-def chunker(seq, size):
-    return (seq[pos:pos + size] for pos in xrange(0, len(seq), size))
-
-def get_multi_paraphrases(sentence, model, src_len=5):
-    """
-    Splits sentence up into chunks of src_len words each, finds paraphrases for
-    each chunk and concatenates together the best-scoring paraphrase per chunk.
-    """
+def fixed_chunker(sentence, chunk_len=4):
     sentence = word_tokenize(sentence)
-    chunks = chunker(sentence, src_len)
+    chunks = [sentence[pos:pos + chunk_len] for pos in xrange(0, len(sentence), chunk_len)]
+    chunks = [untokenize(c) for c in chunks]
+    return chunks
+
+def stopwords_chunker(sentence):
+    sentence = word_tokenize(sentence)
+    stopwords = [",","and","-","or","that","which"]
+    chunks = []
+    j = 0
+    for i in xrange(len(sentence)):
+        if sentence[i] in stopwords:
+            if sentence[j:i] != []:
+                chunks.append(sentence[j:i])
+            j = i
+    chunks.append(sentence[j:])
+    chunks = [untokenize(c) for c in chunks]
+    return chunks
+
+def get_multi_paraphrases(sentence, model, chunker=stopwords_chunker):
+    """
+    Splits sentence up into chunks according to the chunker function, finds
+    paraphrases for each chunk and concatenates together the best-scoring
+    paraphrase per chunk.
+
+    chunker can be: - fixed_chunker
+                    - stopwords_chunker
+                    - extract_phrases_from_sentence
+    """
+    chunks = chunker(sentence)
     c_paraphrases = []
     for c in chunks:
-        c_paraphrases.append(get_paraphrases(' '.join(c)))
+        c_paraphrases.append(get_paraphrases(c))
     selected_paraphrases = batch_select_best_phrase(c_paraphrases, model)
     return ' '.join(selected_paraphrases)
 
@@ -109,17 +131,32 @@ def paraphrase_text(text, model):
         paraphrases.append(get_paraphrases(sentence))
 
     print 'Selecting paraphrases...'
-    selected_paraphrases = batch_select_best_phrase(paraphrases, model)
-    for s, p in zip(sentences, selected_paraphrases):
+    transformed_sentences = batch_select_best_phrase(paraphrases, model)
+    for s, p in zip(sentences, transformed_sentences):
         print s, '->', p
 
-    return ' '.join(selected_paraphrases)
+    return ' '.join(transformed_sentences)
+
+def paraphrase_text_by_chunks(text, model, chunker=stopwords_chunker):
+    paraphrased_text = []
+    print 'Tokenizing...'
+    sentences = sent_tokenize(text)
+
+    transformed_sentences = []
+
+    print 'Generating paraphrases...'
+    for sentence in sentences:
+        transformed_sentence = get_multi_paraphrases(sentence, model, chunker=chunker)
+        print sentence, '->', transformed_sentence
+        transformed_sentences += [transformed_sentence]
+
+    return ' '.join(transformed_sentences)
 
 def main():
     with open('data/obama/hiroshima.txt') as f:
         text = f.read()
         text.encode("ascii","ignore")
-        paraphrase_text(text, 'cv/checkpoint_37000.t7')
+        print paraphrase_text_by_chunks(text, 'cv/checkpoint_37000.t7', chunker=stopwords_chunker)
 
 if __name__ == "__main__":
     main()
