@@ -32,7 +32,7 @@ def extract_phrases_from_sentence(sentence):
   stop = stopwords.words('english')
   phrases = [p for p in phrases if p not in stop]
   new_phrases = []
-  s = sentence.lower()
+  s = sentence
   for i in range(len(phrases)):
     missing = ''
     p = phrases[i]
@@ -54,7 +54,7 @@ def extract_phrases_from_sentence(sentence):
 
 def main():
     # Usage example
-    sentence = "Science allows us to communicate across the seas and fly above the clouds, to cure disease and understand the cosmos, but those same discoveries can be turned into ever more efficient killing machines."
+    sentence = "We are going to make America good again."
     print extract_phrases_from_sentence(sentence)
     #Returns a list of phrases 
 
