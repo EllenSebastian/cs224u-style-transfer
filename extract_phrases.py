@@ -25,7 +25,10 @@ def recurse(t, phrases):
 def extract_phrases_from_sentence(sentence):
   tokenizer = RegexpTokenizer(r'\w+')
   sentence = ' '.join(tokenizer.tokenize(sentence))
-  t = parser.parse(sentence)
+  try:
+    t = parser.parse(sentence)
+  except:
+    return []
   phrases = []
   recurse(t, phrases)
   phrases = [' '.join(p) for p in phrases]
@@ -60,7 +63,7 @@ def extract_phrases_from_sentence(sentence):
 
 def main():
     # Usage example
-    sentence = "Empires have risen and fallen."
+    sentence = "The irreducible worth of every person, the insistence that every life is precious, the radical and necessary notion that we are part of a single human family - that is the story that we all must tell."
     print extract_phrases_from_sentence(sentence)
     #Returns a list of phrases 
 
