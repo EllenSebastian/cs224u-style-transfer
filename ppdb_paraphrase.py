@@ -157,7 +157,7 @@ def main():
     with open('data/obama/hiroshima.txt') as f:
         text = f.read()
         text.encode("ascii","ignore")
-        print paraphrase_text_by_chunks(text, 'cv/checkpoint_37000.t7', chunker=extract_phrases_from_sentence)
+        print paraphrase_text_by_chunks(text, 'twain/checkpoint_82150.t7', chunker=stopwords_chunker)
 
 if __name__ == "__main__":
     main()

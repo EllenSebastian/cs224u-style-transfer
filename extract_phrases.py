@@ -45,11 +45,8 @@ def extract_phrases_from_sentence(sentence):
         break
       missing += s[0]
       s = s[1:]
-    if missing != '' and missing != ' ':
-      if missing[0] == ' ':
-        missing = missing[1:]
-      if missing[len(missing) - 1] == ' ':
-        missing = missing[:-1]
+    missing = missing.strip()
+    if missing != '':
       new_phrases.append(missing)
     new_phrases.append(p)
   if s != '':
