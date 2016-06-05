@@ -21,6 +21,7 @@ if opt.batch == 0 then
 	print(score)
 else
     local file = io.open("temp.txt","rb")
+    -- local debug_file = io.open("debug.txt","w")
     if not file then return nil end
     local best_score = 0
     local best_idx = 0
@@ -35,6 +36,7 @@ else
             best_idx = 0
         else
             local score = model:get_text_score(line, opt.temperature)
+            -- debug_file:write(score,' ',string.len(line),' ',line,'\n')
             if score > best_score then
                 best_score = score
                 best_idx = cur_idx

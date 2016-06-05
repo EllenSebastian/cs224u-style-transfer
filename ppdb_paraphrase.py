@@ -92,7 +92,8 @@ def get_multi_paraphrases(sentence, model, chunker=stopwords_chunker):
     """
     Splits sentence up into chunks according to the chunker function, finds
     paraphrases for each chunk and concatenates together the best-scoring
-    paraphrase per chunk. Returns a string.
+    paraphrase per chunk. Returns a string with the best paraphrase for
+    sentence.
 
     chunker can be: - fixed_chunker
                     - stopwords_chunker
@@ -156,7 +157,7 @@ def main():
     with open('data/obama/hiroshima.txt') as f:
         text = f.read()
         text.encode("ascii","ignore")
-        print paraphrase_text_by_chunks(text, 'cv/checkpoint_37000.t7', chunker=stopwords_chunker)
+        print paraphrase_text_by_chunks(text, 'cv/checkpoint_37000.t7', chunker=extract_phrases_from_sentence)
 
 if __name__ == "__main__":
     main()
