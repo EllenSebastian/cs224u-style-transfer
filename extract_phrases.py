@@ -9,7 +9,7 @@ parser = Parser()
 def recurse(t, phrases):
   for n in t:
     if type(n) is Tree:
-      if n.label() == 'VP' or n.label() == 'NP' and phrases != []:
+      if (n.label() == 'VP' or n.label() == 'NP') and phrases:
         p = phrases[len(phrases) - 1]
         for i in range(len(p)):
           if p[i] == n.leaves()[0]:
@@ -29,8 +29,6 @@ def extract_phrases_from_sentence(sentence):
   phrases = []
   recurse(t, phrases)
   phrases = [' '.join(p) for p in phrases]
-  if phrases[0].islower():
-    phrases[0] = phrases[0].capitalize()  
   stop = stopwords.words('english')
   phrases = [p for p in phrases if p not in stop]
   new_phrases = []
@@ -55,12 +53,14 @@ def extract_phrases_from_sentence(sentence):
     if s[0] == ' ':
       s = s[1:]
     new_phrases.append(s)
+  if new_phrases:
+    new_phrases[0] = new_phrases[0].capitalize()
   return new_phrases
 
 
 def main():
     # Usage example
-    sentence = "Our early ancestors having learned to make blades from flint and spears from wood used these tools not just for hunting but against their own kind."
+    sentence = "Empires have risen and fallen."
     print extract_phrases_from_sentence(sentence)
     #Returns a list of phrases 
 
