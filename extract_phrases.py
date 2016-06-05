@@ -28,7 +28,9 @@ def extract_phrases_from_sentence(sentence):
   t = parser.parse(sentence)
   phrases = []
   recurse(t, phrases)
-  phrases = [' '.join(p) for p in phrases]  
+  phrases = [' '.join(p) for p in phrases]
+  if phrases[0].islower():
+    phrases[0] = phrases[0].capitalize()  
   stop = stopwords.words('english')
   phrases = [p for p in phrases if p not in stop]
   new_phrases = []
@@ -37,7 +39,7 @@ def extract_phrases_from_sentence(sentence):
     missing = ''
     p = phrases[i]
     while s != '':
-      if s.startswith(p):
+      if s.lower().startswith(p.lower()):
         s = s[len(p):]
         break
       missing += s[0]
@@ -49,12 +51,16 @@ def extract_phrases_from_sentence(sentence):
         missing = missing[:-1]
       new_phrases.append(missing)
     new_phrases.append(p)
+  if s != '':
+    if s[0] == ' ':
+      s = s[1:]
+    new_phrases.append(s)
   return new_phrases
 
 
 def main():
     # Usage example
-    sentence = "Make America good again."
+    sentence = "Our early ancestors having learned to make blades from flint and spears from wood used these tools not just for hunting but against their own kind."
     print extract_phrases_from_sentence(sentence)
     #Returns a list of phrases 
 
