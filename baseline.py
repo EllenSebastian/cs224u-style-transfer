@@ -23,7 +23,7 @@ counts = collections.Counter()
 translation = ''
 
 with open(args.source) as source:
-  for filename in glob.iglob(args.targetdir + '/*.txt'):
+  for filename in glob.iglob(args.targetdir + '/train.txt'):
     with open(filename) as f:
       content = f.read().replace('\n', '').split(' ')
       counts += collections.Counter(content)

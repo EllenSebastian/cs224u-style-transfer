@@ -159,10 +159,10 @@ def main():
         'shakespeare' : 'shakespeare/checkpoint_17050.t7',
         'twain' : 'twain/checkpoint_82150.t7'
     }
-    with open('data/sources/crafted.txt') as f:
+    with open('data/sources/dream.txt') as f:
         text = f.read()
         text.encode("ascii","ignore")
-        print paraphrase_text_by_chunks(text, styles['trump'], chunker=stopwords_chunker)
+        print paraphrase_text_by_chunks(text, styles['shakespeare'], chunker=extract_phrases_from_sentence)
 
 if __name__ == "__main__":
     main()

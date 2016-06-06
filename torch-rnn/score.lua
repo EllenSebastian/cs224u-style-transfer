@@ -7,6 +7,7 @@ require 'LanguageModel'
 local cmd = torch.CmdLine()
 cmd:option('-checkpoint', 'cv/checkpoint_4000.t7')
 cmd:option('-text', '')
+cmd:option('-file', '')
 cmd:option('-temperature', 1)
 cmd:option('-batch', 0)
 local opt = cmd:parse(arg)
@@ -17,8 +18,15 @@ local model = checkpoint.model
 model:evaluate()
 
 if opt.batch == 0 then
-	local score = model:get_text_score(opt.text, opt.temperature)
-	print(score)
+    if opt.text ~= '' then
+        local score = model:get_text_score(opt.text, opt.temperature)
+        print(score)
+    else
+        local file = io.open(opt.file,"rb")
+        local file_text = file:read("*all")
+        local score = model:get_text_score(file_text, opt.temperature)
+        print(score)
+    end
 else
     local file = io.open("temp.txt","rb")
     -- local debug_file = io.open("debug.txt","w")
