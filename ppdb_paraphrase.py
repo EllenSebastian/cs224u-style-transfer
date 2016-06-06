@@ -154,10 +154,15 @@ def paraphrase_text_by_chunks(text, model, chunker=stopwords_chunker):
     return ' '.join(transformed_sentences)
 
 def main():
-    with open('data/obama/hiroshima.txt') as f:
+    styles = {
+        'trump' : 'cv/checkpoint_37000.t7',
+        'shakespeare' : 'shakespeare/checkpoint_17050.t7',
+        'twain' : 'twain/checkpoint_82150.t7'
+    }
+    with open('data/sources/crafted.txt') as f:
         text = f.read()
         text.encode("ascii","ignore")
-        print paraphrase_text_by_chunks(text, 'twain/checkpoint_82150.t7', chunker=stopwords_chunker)
+        print paraphrase_text_by_chunks(text, styles['trump'], chunker=stopwords_chunker)
 
 if __name__ == "__main__":
     main()

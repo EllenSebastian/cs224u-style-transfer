@@ -4,7 +4,8 @@ import subprocess
 import os
 
 def is_ascii(s):
-    return all(ord(c) < 128 for c in s) and (not '\\' in s) and (not '%' in s)
+    bad_chars = '\\%#*`'
+    return all(ord(c) < 128 and (not c in bad_chars) for c in s)
 
 def batch_select_best_phrase(phrases, model, temp=1):
     """
