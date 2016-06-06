@@ -23,10 +23,9 @@ def recurse(t, phrases):
         recurse(c, phrases)
 
 def extract_phrases_from_sentence(sentence):
-  tokenizer = RegexpTokenizer(r'\w+')
-  sentence = ' '.join(tokenizer.tokenize(sentence))
   try:
     t = parser.parse(sentence)
+    print t
   except:
     return []
   phrases = []
@@ -35,6 +34,8 @@ def extract_phrases_from_sentence(sentence):
   stop = stopwords.words('english')
   phrases = [p for p in phrases if p not in stop]
   new_phrases = []
+  if phrases[0].islower():
+    phrases[0] = phrases[0].capitalize()
   s = sentence
   for i in range(len(phrases)):
     missing = ''
@@ -61,7 +62,7 @@ def extract_phrases_from_sentence(sentence):
 
 def main():
     # Usage example
-    sentence = "The irreducible worth of every person, the insistence that every life is precious, the radical and necessary notion that we are part of a single human family - that is the story that we all must tell."
+    sentence = "Shot, beaten, marched, bombed, jailed, starved, gassed to death."
     print extract_phrases_from_sentence(sentence)
     #Returns a list of phrases 
 
