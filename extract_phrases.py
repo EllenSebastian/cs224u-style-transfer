@@ -69,6 +69,7 @@ def extract_phrases_from_sentence(sentence):
     append_to_list(new_phrases, s)
   if new_phrases:
     new_phrases[0] = new_phrases[0].capitalize()
+  new_phrases = filter(lambda x: x != '', new_phrases)
   return new_phrases
 
 def main():

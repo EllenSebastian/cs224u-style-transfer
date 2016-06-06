@@ -162,7 +162,7 @@ def main():
     with open('data/sources/dream.txt') as f:
         text = f.read()
         text.encode("ascii","ignore")
-        print paraphrase_text_by_chunks(text, styles['shakespeare'], chunker=extract_phrases_from_sentence)
+        print paraphrase_text_by_chunks(text, styles['trump'], chunker=extract_phrases_from_sentence)
 
 if __name__ == "__main__":
     main()
